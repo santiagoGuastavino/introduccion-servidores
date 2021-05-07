@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-app.listen(3030, () => console.log('Server running'));
-app.use(express.static('public'));
+const publicPath = path.resolve('./public');
+app.use(express.static(publicPath));
 
 let indexPath = path.resolve('./views/index.html');
 app.get('/' , (req,res) => res.sendFile(indexPath));
@@ -28,3 +28,17 @@ app.get('/lovelace' , (req,res) => res.sendFile(lovelacePath));
 
 let turingPath = path.resolve('./views/turing.html');
 app.get('/turing' , (req,res) => res.sendFile(turingPath));
+
+app.get('/product/:idProduct', (req,res) => res.send('This is deatil of product nº ' + req.params.idProduct));
+
+app.get('/product/:idProduct/comment/:idComment?', function (req,res){
+    let idProduct = req.params.idProduct;
+    let idComment = req.params.idComment;
+    if (idComment == undefined) {
+        res.send('This is the comment section of product nº ' + idProduct);
+    } else {
+        res.send('This is the comment section of product nº ' + idProduct + ' and you are currently looking at comment nº ' + idComment);
+    };
+});
+
+app.listen(3001, () => console.log('Server running'));
